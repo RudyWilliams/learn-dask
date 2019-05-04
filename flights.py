@@ -1,25 +1,39 @@
 import pandas as pd 
 
 
-df09 = pd.read_csv('data\\florida_flights_2009.csv')
-df19 = pd.read_csv('data\\florida_flights_2019.csv')
-#since only two I'll do this way
-data = [df09, df19]
-n_delays = []
-n_flights = []
+def read_one(filename):
+    return pd.read_csv(filename)
 
-def delay_count(df):
-    return (df['DEP_DELAY'] > 0).sum()
-
-def flight_count(df):
+def count_flights(df):
     return df.shape[0]
 
-for df in data:
-    n_delays.append(delay_count(df))
-    n_flights.append(flight_count(df))
+def count_delayed(df):
+    """
+        count the number of delayed flights
+    """
+    return (df['DEP_DELAY'] > 0).sum()
+
+def pct_delayed(n_delayed, n_flights):
+    return 100 * sum(n_delayed) / sum(n_flights)
+    #n_delayed and n_flights will be lists for each
+    #with elements corresponding to the chunks
 
 if __name__ == '__main__':
-    print(n_delays)
-    print(n_flights)
+    
+    import time
 
-    print(sum(n_delays) / sum(n_flights) * 100)
+    files = ['data\\florida_flights_2009.csv', 'data\\florida_flights_2019.csv']
+    n_delayed = []
+    n_flights = []
+
+    t0 = time.time()
+    for f in files:
+        df = read_one(f)
+        n_delayed.append(count_delayed(df))
+        n_flights.append(count_flights(df))
+
+    result = pct_delayed(n_delayed, n_flights)
+    t1 = time.time()
+
+    print(f'{result} in {t1 - t0} seconds')
+

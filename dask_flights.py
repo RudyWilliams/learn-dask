@@ -23,10 +23,14 @@ def pct_delayed(n_delayed, n_flights):
     #with elements corresponding to the chunks
 
 if __name__ == '__main__':
+    
+    import time
+
     files = ['data\\florida_flights_2009.csv', 'data\\florida_flights_2019.csv']
     n_delayed = []
     n_flights = []
 
+    t0 = time.time()
     for f in files:
         df = read_one(f)
         n_delayed.append(count_delayed(df))
@@ -34,5 +38,8 @@ if __name__ == '__main__':
 
     #compute them together
     result = pct_delayed(n_delayed, n_flights)
-    print(result.compute())
+    c_result = result.compute()
+    t1 = time.time()
+
+    print(f'{c_result} in {t1 - t0} seconds')
 
