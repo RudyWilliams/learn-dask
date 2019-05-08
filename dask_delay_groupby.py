@@ -7,27 +7,13 @@ import parallel
 import flights as non_parallel
 from dask_decorators import runtime_timer
 
-### some exporatory work to see how to clean the data ###
-# df = pd.read_csv('data\\flights_2019.csv')
-# df = df.drop(['Unnamed: 10'], axis=1) #extra col for some reason
-# #583985 observations, 10 columns
-# #using:
-# #
-# #print(df.info())
-# #
-# #we see that DEP_DELAY only has 567630
-# #need to remove the nans from the data
-# df = df.dropna(axis=0, subset=['DEP_DELAY'])
-
-# byOrigin = df.groupby('ORIGIN')['DEP_DELAY'].mean()
-###
 
 @delayed
 def delayed_set(delayed_list):
     return set(delayed_list)
 
 def make_index_consistent(series_list, parallel=False):
-    
+    """summing the series leads to nans staying nans...should be considered 0s"""
     assert len(series_list) == 3        
     airport_index = series_list[0].index.tolist() + series_list[1].index.tolist() + series_list[2].index.tolist()
 
@@ -111,9 +97,6 @@ def d_delays_and_count_per_airport(file_list):
         sums.append(sumByOrigin)
         counts.append(countByOrigin)
 
-    
-    
-
     #python's built in sum() would add the series as needed
     #BUT we need to fill in any nans first
     del_sums = make_index_consistent(sums, parallel=True)
@@ -121,7 +104,7 @@ def d_delays_and_count_per_airport(file_list):
     delays_by_airport_sum = sum(del_sums)
     delays_by_airport_count = sum(arpt_counts)
     all_years_sums, all_years_counts = compute(delays_by_airport_sum, delays_by_airport_count)
-    all_years_sums
+    
     return all_years_sums, all_years_counts
 
 #leave out the florida only data files

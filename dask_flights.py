@@ -41,5 +41,5 @@ if __name__ == '__main__':
     c_result = result.compute()
     t1 = time.time()
 
-    print(f'{c_result} in {t1 - t0} seconds')
+    print(f'IN-PARALLEL: {c_result} in {t1 - t0} seconds')
 

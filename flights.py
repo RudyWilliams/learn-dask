@@ -35,5 +35,5 @@ if __name__ == '__main__':
     result = pct_delayed(n_delayed, n_flights)
     t1 = time.time()
 
-    print(f'{result} in {t1 - t0} seconds')
+    print(f'NOT IN-PARALLEL: {result} in {t1 - t0} seconds.')
 

@@ -12,17 +12,11 @@ def csv_to_df(*args, **kwargs):
 #Won't need sep parallel functions:
 #   dropping nans
 #   groupby 
-#   sumByOrigin?
-#   countByOrigin?
-
-
-
-
+#   sumByOrigin
+#   countByOrigin
 
 
 if __name__ == '__main__':
-    df = csv_to_df(filepath_or_buffer='data\\flights_2017.csv', usecols=['YEAR', 'ORIGIN', 'ORIGIN_CITY_NAME', 'ORIGIN_STATE_ABR',
-            'DEST', 'DEST_CITY_NAME', 'DEST_STATE_ABR', 'DEP_DELAY',
-            'DEP_DELAY_NEW', 'ACTUAL_ELAPSED_TIME'])
+    pass
 
    
