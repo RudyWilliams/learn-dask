@@ -1,45 +1,52 @@
+import glob
 from dask import delayed
 import pandas as pd 
+import dask_decorators
 
 @delayed
-def read_one(filename):
+def d_read_one(filename):
     return pd.read_csv(filename)
 
 @delayed
-def count_flights(df):
+def d_count_flights(df):
     return df.shape[0]
 
 @delayed
-def count_delayed(df):
+def d_count_delayed(df):
     """
         count the number of delayed flights
     """
     return (df['DEP_DELAY'] > 0).sum()
 
 @delayed
-def pct_delayed(n_delayed, n_flights):
+def d_pct_delayed(n_delayed, n_flights):
     return 100 * sum(n_delayed) / sum(n_flights)
     #n_delayed and n_flights will be lists for each
     #with elements corresponding to the chunks
 
-if __name__ == '__main__':
+@dask_decorators.runtime_timer
+def parallel_main():
     
-    import time
-
-    files = ['data\\florida_flights_2009.csv', 'data\\florida_flights_2019.csv']
+    files = glob.glob('data\\flights_20*.csv')
     n_delayed = []
     n_flights = []
 
-    t0 = time.time()
-    for f in files:
-        df = read_one(f)
-        n_delayed.append(count_delayed(df))
-        n_flights.append(count_flights(df))
+    for file in files:
+        df=d_read_one(file)
+        n_delayed.append(d_count_delayed(df))
+        n_flights.append(d_count_flights(df))
+    
+    results = d_pct_delayed(n_delayed, n_flights).compute()
+    
+    return results
 
-    #compute them together
-    result = pct_delayed(n_delayed, n_flights)
-    c_result = result.compute()
-    t1 = time.time()
 
-    print(f'IN-PARALLEL: {c_result} in {t1 - t0} seconds')
+if __name__ == '__main__':
+    
+    print(parallel_main())
 
+    """
+    We see a decrease from about 3.6 seconds to 1.9 seconds. But 
+    I want to look into the delaying of the pct_delayed function
+    and what it does.
+    """ 
