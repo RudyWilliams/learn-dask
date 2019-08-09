@@ -66,7 +66,7 @@ def parallel_main_eager_pct():
 if __name__ == '__main__':
     
     graph0, r0 = parallel_main()
-    graph0.visualize(filename='delayed_pct.png')
+    graph0.visualize(filename='images\\delayed_pct.png')
     print(r0)
 
     """
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     """ 
     print('\n')
     graph, r = parallel_main_eager_pct()
-    graph.visualize(filename='eager_pct.png')
+    graph.visualize(filename='images\\eager_pct.png')
     print(r)
     """
     If take out compute() then we return a delayed true division object.
