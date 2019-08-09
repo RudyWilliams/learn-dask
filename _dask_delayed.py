@@ -44,7 +44,6 @@ if __name__ == '__main__':
     print(f'\ngraph build: {d_elp_time}')
     #no time bc no comp done
     
-    print(z)
     comp_t0 = time.time()
     result = z.compute()
     comp_t1 = time.time()
